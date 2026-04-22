@@ -428,7 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: partnershipSection,
                 start: "top top",
-                end: () => `+=${textCol.offsetHeight - window.innerHeight + (window.innerHeight * 0.2)}`,
+                end: () => `+=${textCol.scrollHeight - window.innerHeight + (window.innerHeight * 0.2)}`,
                 pin: true,
                 scrub: 1,
                 anticipatePin: 1
@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Move a coluna de texto para cima criando o efeito parallax
         tlPartnership.to(textCol, {
-            y: () => -(textCol.offsetHeight - window.innerHeight + (window.innerHeight * 0.2)),
+            y: () => -(textCol.scrollHeight - window.innerHeight + (window.innerHeight * 0.2)),
             ease: "none"
         }, 0);
 
