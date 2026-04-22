@@ -213,7 +213,7 @@ body.second-fold-active:hover .custom-cursor-follower.hovering {
 ------------------------*/
 #fold4-progress {
     position: fixed;
-    left: clamp(16px, 3vw, 32px);
+    right: clamp(16px, 3vw, 32px); /* Changed from left to right */
     top: 50%;
     transform: translateY(-50%);
     z-index: 300;
