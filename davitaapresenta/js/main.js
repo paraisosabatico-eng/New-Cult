@@ -418,20 +418,48 @@ document.addEventListener("DOMContentLoaded", () => {
         tlVids.to({}, { duration: 1 }, "f8");
     }
 
-    // --- DOBRA 7: Parceria Scroll Tracker ---
+    // --- DOBRA 7: Parceria Scroll Tracker & Stop/Scroll ---
     const partnershipSection = document.getElementById('seventh-fold-partnership');
     const partnershipDot = document.getElementById('parceria-dot');
-    
-    if (partnershipSection && partnershipDot) {
+    const textCol = partnershipSection?.querySelector('.partnership-text-col');
+
+    if (partnershipSection && textCol && window.innerWidth >= 1024) {
+        let tlPartnership = gsap.timeline({
+            scrollTrigger: {
+                trigger: partnershipSection,
+                start: "top top",
+                end: () => `+=${textCol.offsetHeight - window.innerHeight + (window.innerHeight * 0.2)}`,
+                pin: true,
+                scrub: 1,
+                anticipatePin: 1
+            }
+        });
+
+        // Move a coluna de texto para cima criando o efeito parallax
+        tlPartnership.to(textCol, {
+            y: () => -(textCol.offsetHeight - window.innerHeight + (window.innerHeight * 0.2)),
+            ease: "none"
+        }, 0);
+
+        // Move a bolinha amarela sincronizada
+        if (partnershipDot) {
+            tlPartnership.to(partnershipDot, {
+                top: "100%",
+                y: "-100%",
+                ease: "none"
+            }, 0);
+        }
+    } else if (partnershipSection && partnershipDot && window.innerWidth < 1024) {
+        // Fallback Mobile
         gsap.to(partnershipDot, {
             top: "100%",
-            y: "-100%", // Transforma pra dentro pra nao vazar a linha
+            y: "-100%",
             ease: "none",
             scrollTrigger: {
                 trigger: partnershipSection,
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 0.15 // Suavidade na rolagem
+                scrub: 0.15
             }
         });
     }

@@ -1,6 +1,5 @@
 /* Base e Reset */
 html {
-    overflow-x: hidden;
     max-width: 100vw;
 }
 
@@ -20,7 +19,6 @@ html.lenis, html.lenis-smooth {
 body {
     background-color: #05070a;
     color: #f8fafc;
-    overflow-x: hidden;
     max-width: 100vw;
     cursor: none; /* Esconde o cursor nativo */
 }
@@ -32,7 +30,7 @@ body {
     }
     #seventh-fold-partnership,
     #dark-folds-wrapper {
-        overflow-x: hidden;
+        clip-path: inset(0); /* Better than overflow-hidden for sticky elements */
         max-width: 100vw;
     }
 }
@@ -253,4 +251,23 @@ body.second-fold-active:hover .custom-cursor-follower.hovering {
         0 0 40px 10px rgba(232, 184, 0, 0.12);
     transition: height 0.05s linear;
     will-change: height;
+}
+
+/* -----------------------
+   CUSTOM SCROLLBAR (A24 / Editorial Vibe)
+   ----------------------- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #05070a; 
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(234, 179, 8, 0.3); /* Dourado suave */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(234, 179, 8, 0.6); /* Dourado mais forte no hover */
 }
