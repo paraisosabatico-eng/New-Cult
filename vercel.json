@@ -1,0 +1,18 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "routes": [
+    {
+      "src": "/davitaapresenta/?",
+      "dest": "/davitaapresenta/index.html"
+    },
+    {
+      "src": "/davitaapresenta/(.*)",
+      "dest": "/davitaapresenta/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

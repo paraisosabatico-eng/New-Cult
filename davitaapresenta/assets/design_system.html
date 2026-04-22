@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GAQO & Principa — Design System</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Iconify from Temples -->
+    <script src="Temples/Principa - ai-digital-systems/assets/lucide_latest_2eebd0ebe8c2.es"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Particles.js -->
+    <script src="Temples/Principa - ai-digital-systems/assets/particles_d0c52d4157ec.js"></script>
+
+    <!-- Tailwind Play CDN for immediate rendering without build step -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        geist: ['Inter', 'sans-serif'], // Fallback for geist
+                        display: ['Inter', 'sans-serif'], // Fallback for display
+                        mono: ['Courier New', 'monospace'],
+                    },
+                    colors: {
+                        system: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        brand: {
+                            light: '#EEF4FA',
+                            blue: '#3b82f6',
+                            accent: '#60a5fa',
+                            yellow: '#eeab1b'
+                        }
+                    }
+                }
+            },
+            plugins: [
+                function({ addUtilities }) {
+                    const rotateXUtilities = {};
+                    const rotateYUtilities = {};
+                    const rotateValues = [0, 5, 10, 15, 20, 30, 45];
+                    
+                    rotateValues.forEach((value) => {
+                        rotateXUtilities[`.rotate-x-${value}`] = {
+                            transform: `rotateX(${value}deg)`,
+                        };
+                        rotateYUtilities[`.rotate-y-${value}`] = {
+                            transform: `rotateY(${value}deg)`,
+                        };
+                        if (value !== 0) {
+                            rotateXUtilities[`.-rotate-x-${value}`] = {
+                                transform: `rotateX(-${value}deg)`,
+                            };
+                            rotateYUtilities[`.-rotate-y-${value}`] = {
+                                transform: `rotateY(-${value}deg)`,
+                            };
+                        }
+                    });
+                    
+                    const perspectiveUtilities = {
+                        ".perspective-near": { perspective: "300px" },
+                        ".perspective-normal": { perspective: "500px" },
+                        ".perspective-midrange": { perspective: "800px" },
+                        ".perspective-distant": { perspective: "1200px" },
+                    };
+                    
+                    addUtilities({
+                        ...rotateXUtilities,
+                        ...rotateYUtilities,
+                        ...perspectiveUtilities,
+                        ".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+                    });
+                }
+            ]
+        };
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+            cursor: none; /* Hide default cursor to use custom */
+        }
+
+        /* -----------------------
+           CUSTOM CURSOR EFX
+        ------------------------*/
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference;
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .custom-cursor-follower {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s, opacity 0.4s;
+            transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body:hover .custom-cursor.hovering {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(238, 171, 27, 0.6); /* Brand Yellow border on hover */
+            mix-blend-mode: normal;
+        }
+
+        /* -----------------------
+           SCROLL ANIMATIONS
+        ------------------------*/
+        .anim-fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .anim-fade-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Text Reveal Wrapper */
+        .text-reveal-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        .text-reveal-content {
+            display: inline-block;
+            transform: translateY(110%);
+            opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+        }
+
+        .is-visible .text-reveal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Lettering Transparente GAQO Style */
+        .transparent-lettering {
+            background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(15,23,42,0.2) 80%);
+            -webkit-background-clip: z-text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        /* Decorative Grid */
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Dynamic Glass Panel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen relative selection:bg-brand-blue selection:text-white">
+    
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="custom-cursor-follower" id="cursor-follower"></div>
+
+    <!-- Global Background Elements -->
+    <div class="fixed inset-0 z-[-1] pointer-events-none">
+        <!-- GAQO Light Theme Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#f0f4f8] via-[#f8fafc] to-white"></div>
+        <div class="absolute inset-0 grid-bg"></div>
+    </div>
+
+    <!-- Particles Overlay Base -->
+    <div class="fixed inset-0 z-[1] pointer-events-none" id="particles-js"></div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 pt-6 anim-fade-up is-visible">
+        <div class="mx-auto max-w-7xl">
+            <div class="relative h-14 sm:h-16 flex items-center justify-between rounded-full border border-white/60 bg-white/55 backdrop-blur-xl shadow-[0_10px_40px_rgba(148,163,184,0.16)] px-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full border border-brand-blue/30 bg-gradient-to-br from-white to-blue-50 flex items-center justify-center cursor-hover">
+                        <iconify-icon icon="solar:atom-linear" class="text-brand-blue text-xl"></iconify-icon>
+                    </div>
+                    <span class="font-semibold tracking-tight text-system-900">SYSTEM.UX</span>
+                </div>
+                
+                <nav class="hidden md:flex items-center gap-2">
+                    <a href="#hero" class="px-4 py-2 rounded-full text-sm font-medium text-system-600 hover:text-system-900 hover:bg-white/80 transition cursor-hover">Overview</a>
+                    <a href="#typography" class="px-4 py-2 rounded-full text-sm font-medium text-system-600 hover:text-system-900 hover:bg-white/80 transition cursor-hover">Typography</a>
+                    <a href="#colors" class="px-4 py-2 rounded-full text-sm font-medium text-system-600 hover:text-system-900 hover:bg-white/80 transition cursor-hover">Colors</a>
+                    <a href="#components" class="px-4 py-2 rounded-full text-sm font-medium text-system-600 hover:text-system-900 hover:bg-white/80 transition cursor-hover">Components</a>
+                </nav>
+
+                <div class="flex items-center">
+                    <a href="#components" class="inline-flex h-10 items-center justify-center rounded-full border border-brand-blue/30 bg-gradient-to-r from-white to-blue-50 px-5 text-sm font-medium text-system-900 shadow-sm transition hover:shadow-md hover:border-brand-blue/50 cursor-hover">
+                        Explore kit
+                        <iconify-icon icon="solar:arrow-right-linear" class="ml-2 text-brand-blue"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO FOLD -->
+    <section id="hero" class="relative min-h-[920px] overflow-hidden flex items-center pt-24 px-6 md:px-12">
+        <div class="absolute inset-0 z-0">
+            <!-- Decorative overlays & glows -->
+            <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[100px] opacity-70"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-indigo-300/10 rounded-full blur-[120px] opacity-50"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-7 anim-trigger">
+                <div class="inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white/60 backdrop-blur-md px-4 py-2 shadow-sm mb-8 anim-fade-up delay-[100ms]">
+                    <span class="w-2 h-2 rounded-full bg-brand-yellow animate-pulse shadow-[0_0_8px_#eeab1b]"></span>
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-blue-700">Live Observatory Design</span>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl lg:text-[5.5rem] font-light leading-[0.95] tracking-tight text-system-950 mb-8 max-w-[800px]">
+                    <span class="text-reveal-wrapper block mb-2">
+                        <span class="text-reveal-content transparent-lettering font-semibold tracking-tighter" style="transition-delay: 0.1s">Interactive</span>
+                    </span>
+                    <span class="text-reveal-wrapper block mb-2">
+                        <span class="text-reveal-content" style="transition-delay: 0.2s">digital patterns</span>
+                    </span>
+                    <span class="text-reveal-wrapper block">
+                        <span class="text-reveal-content text-slate-400" style="transition-delay: 0.3s">for observation.</span>
+                    </span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-system-600 leading-relaxed max-w-2xl mb-10 anim-fade-up delay-[400ms]">
+                    Merging the clarity of white structural glassmorphism with fluid 3D interactions. This system unifies principles from Principa and GAQO into a seamless frontend architecture.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 anim-fade-up delay-[500ms]">
+                    <a href="#components" class="inline-flex h-14 items-center justify-center rounded-full bg-system-950 px-8 text-sm font-medium text-white shadow-lg transition-all hover:bg-system-800 hover:shadow-xl hover:-translate-y-1 cursor-hover">
+                        View Components
+                    </a>
+                    <a href="#typography" class="inline-flex h-14 items-center justify-center rounded-full border border-system-300 bg-white/50 backdrop-blur-md px-8 text-sm font-medium text-system-800 shadow-sm transition-all hover:bg-white hover:border-system-400 cursor-hover">
+                        Read Guidelines
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Feature 3D Display -->
+            <div class="lg:col-span-5 relative h-[600px] flex items-center justify-center perspective-distant pointer-events-none hidden md:flex anim-fade-up delay-[600ms]">
+                <div class="relative w-full max-w-[400px] aspect-[4/5] transform-style-preserve-3d shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[32px]">
+                    <!-- Back panel glow -->
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-[32px] blur-2xl transform translate-z-[-50px]"></div>
+                    
+                    <!-- Main Card -->
+                    <div class="absolute inset-0 glass-panel rounded-[32px] overflow-hidden border border-white/80 p-8 flex flex-col justify-between transform rotate-y-[-15deg] rotate-x-[5deg] hover:rotate-y-[0deg] hover:rotate-x-[0deg] transition-transform duration-1000 ease-out z-10">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-blue to-indigo-400 flex items-center justify-center">
+                                    <iconify-icon icon="solar:code-square-linear" class="text-white text-xl"></iconify-icon>
+                                </div>
+                                <span class="font-medium text-sm text-system-800">Sys_Core</span>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-mono font-medium">v1.2.0</span>
+                        </div>
+                        
+                        <div class="my-8">
+                            <h3 class="text-3xl font-semibold tracking-tight text-system-900 mb-2 transparent-lettering">Fluid<br>Dynamics</h3>
+                            <p class="text-sm text-system-500 line-clamp-3">Real-time reactive components simulating physical depth through precise 3D transforms & glass effects.</p>
+                        </div>
+                        
+                        <!-- Mini data viz -->
+                        <div class="space-y-3">
+                            <div class="h-2 w-full bg-system-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-brand-blue w-[76%] rounded-full"></div>
+                            </div>
+                            <div class="h-2 w-full bg-system-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-400 w-[42%] rounded-full"></div>
+                            </div>
+                            <div class="h-2 w-full bg-system-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-300 w-[90%] rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating detail -->
+                    <div class="absolute -right-8 bottom-16 glass-panel p-4 rounded-2xl border border-white/90 shadow-xl transform translate-z-[40px] rotate-y-[-10deg] z-20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <iconify-icon icon="solar:check-read-linear" class="text-emerald-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-system-900">Sync Active</p>
+                                <p class="text-[10px] text-system-500">2ms latency</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="w-full h-px bg-gradient-to-r from-transparent via-system-300 to-transparent my-12 relative z-10"></div>
+
+    <!-- 2. TYPOGRAPHY -->
+    <section id="typography" class="relative z-10 py-24 px-6 md:px-12 bg-white/30 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto anim-trigger">
+            <div class="mb-16 anim-fade-up">
+                <span class="font-mono text-xs uppercase tracking-widest text-brand-blue block mb-4">02 — Foundations</span>
+                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-system-900">Typography Scale</h2>
+            </div>
+
+            <div class="bg-white/60 border border-white/80 rounded-[32px] p-8 md:p-12 shadow-sm anim-fade-up delay-[200ms]">
+                <!-- H1 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-8 border-b border-system-200">
+                    <div class="col-span-3 text-xs font-mono text-system-500 uppercase">Display 1</div>
+                    <div class="col-span-6">
+                        <h1 class="text-6xl md:text-7xl font-semibold tracking-tighter text-system-950 leading-none">Observatory</h1>
+                    </div>
+                    <div class="col-span-3 text-right text-xs font-mono text-system-400 hidden md:block">Inter / 72px / Bold</div>
+                </div>
+                <!-- H2 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-8 border-b border-system-200">
+                    <div class="col-span-3 text-xs font-mono text-system-500 uppercase">Heading 2</div>
+                    <div class="col-span-6">
+                        <h2 class="text-4xl md:text-5xl font-light tracking-tight text-system-900">Data Synchronization</h2>
+                    </div>
+                    <div class="col-span-3 text-right text-xs font-mono text-system-400 hidden md:block">Inter / 48px / Light</div>
+                </div>
+                <!-- H3 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-8 border-b border-system-200">
+                    <div class="col-span-3 text-xs font-mono text-system-500 uppercase">Heading 3</div>
+                    <div class="col-span-6">
+                        <h3 class="text-2xl md:text-3xl font-medium tracking-tight text-system-800">Atmospheric Data Streams</h3>
+                    </div>
+                    <div class="col-span-3 text-right text-xs font-mono text-system-400 hidden md:block">Inter / 30px / Medium</div>
+                </div>
+                <!-- Body -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-8 border-b border-system-200">
+                    <div class="col-span-3 text-xs font-mono text-system-500 uppercase">Body Large</div>
+                    <div class="col-span-6">
+                        <p class="text-lg text-system-600 leading-relaxed">
+                            Project likely movement, density change, and short-range environmental shifts across time and geography to support clearer response planning.
+                        </p>
+                    </div>
+                    <div class="col-span-3 text-right text-xs font-mono text-system-400 hidden md:block">Inter / 18px / Regular</div>
+                </div>
+                <!-- Label -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-8">
+                    <div class="col-span-3 text-xs font-mono text-system-500 uppercase">Caption / Meta</div>
+                    <div class="col-span-6">
+                        <span class="text-xs uppercase tracking-[0.2em] font-bold text-system-500">SECURE CLUSTER LAYER</span>
+                    </div>
+                    <div class="col-span-3 text-right text-xs font-mono text-system-400 hidden md:block">Inter / 12px / Bold / Tracking</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. COLORS & SURFACES -->
+    <section id="colors" class="relative z-10 py-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto anim-trigger">
+            <div class="mb-16 anim-fade-up">
+                <span class="font-mono text-xs uppercase tracking-widest text-brand-blue block mb-4">03 — Palettes</span>
+                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-system-900">Colors & Materials</h2>
+            </div>
+
+            <!-- Primitives -->
+            <h3 class="text-xl font-medium mb-6 mt-12 text-system-800">Primary Brand</h3>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 anim-fade-up delay-[200ms]">
+                <div class="glass-panel p-4 rounded-3xl flex flex-col items-center justify-end h-48 relative overflow-hidden group cursor-hover">
+                    <div class="absolute inset-0 bg-brand-yellow opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                    <div class="absolute top-4 left-4 w-12 h-12 rounded-full bg-brand-yellow shadow-[0_0_20px_rgba(238,171,27,0.6)]"></div>
+                    <div class="mt-auto w-full text-center">
+                        <p class="font-semibold text-system-900">Brand Yellow</p>
+                        <p class="text-xs font-mono text-system-500">#EEAB1B</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl flex flex-col items-center justify-end h-48 relative overflow-hidden group cursor-hover">
+                    <div class="absolute inset-0 bg-brand-blue opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                    <div class="absolute top-4 left-4 w-12 h-12 rounded-full bg-brand-blue shadow-[0_0_20px_rgba(59,130,246,0.6)]"></div>
+                    <div class="mt-auto w-full text-center">
+                        <p class="font-semibold text-system-900">Brand Blue</p>
+                        <p class="text-xs font-mono text-system-500">#3B82F6</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl flex flex-col items-center justify-end h-48 relative overflow-hidden group cursor-hover">
+                    <div class="absolute inset-0 bg-system-950 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity"></div>
+                    <div class="absolute top-4 left-4 w-12 h-12 rounded-full bg-system-950 shadow-lg"></div>
+                    <div class="mt-auto w-full text-center">
+                        <p class="font-semibold text-system-900">System 950</p>
+                        <p class="text-xs font-mono text-system-500">#020617</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl flex flex-col items-center justify-end h-48 relative overflow-hidden group cursor-hover">
+                    <div class="absolute top-4 left-4 w-12 h-12 rounded-full bg-white border border-system-200 shadow-md"></div>
+                    <div class="mt-auto w-full text-center">
+                        <p class="font-semibold text-system-900">Pure White</p>
+                        <p class="text-xs font-mono text-system-500">#FFFFFF</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl flex flex-col items-center justify-end h-48 relative overflow-hidden group cursor-hover">
+                    <div class="absolute inset-0 bg-brand-light opacity-50"></div>
+                    <div class="absolute top-4 left-4 w-12 h-12 rounded-full bg-[#EEF4FA] border border-[#d6e5f3] shadow-inner"></div>
+                    <div class="mt-auto w-full text-center relative z-10">
+                        <p class="font-semibold text-system-900">Light Tint</p>
+                        <p class="text-xs font-mono text-system-500">#EEF4FA</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Glassmorphism -->
+            <h3 class="text-xl font-medium mb-6 mt-16 text-system-800">Surface / Material Overlays</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 anim-fade-up delay-[300ms]">
+                <div class="h-64 rounded-3xl relative overflow-hidden flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                    <div class="relative z-10 w-2/3 h-2/3 glass-panel rounded-2xl flex flex-col items-center justify-center p-6 text-center cursor-hover hover:scale-105 transition-transform duration-500">
+                        <span class="font-bold text-system-900 text-lg">.glass-panel</span>
+                        <span class="text-sm text-system-600 mt-2">bg-white/60 + backdrop-blur(16px)</span>
+                    </div>
+                </div>
+                <div class="h-64 rounded-3xl relative overflow-hidden flex items-center justify-center bg-system-900">
+                    <div class="absolute -right-10 -top-10 w-48 h-48 bg-brand-blue rounded-full blur-[80px]"></div>
+                    <div class="relative z-10 w-2/3 h-2/3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex flex-col items-center justify-center p-6 text-center cursor-hover hover:scale-105 transition-transform duration-500 shadow-2xl">
+                        <span class="font-bold text-white text-lg">Dark Glass</span>
+                        <span class="text-sm text-white/70 mt-2">bg-white/10 + border-white/20</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="w-full h-px bg-gradient-to-r from-transparent via-system-300 to-transparent my-12 relative z-10"></div>
+
+    <!-- 4. UI COMPONENTS -->
+    <section id="components" class="relative z-10 py-24 px-6 md:px-12 bg-white/30 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto anim-trigger">
+            <div class="mb-16 anim-fade-up">
+                <span class="font-mono text-xs uppercase tracking-widest text-brand-blue block mb-4">04 — Library</span>
+                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-system-900">Components & Interactions</h2>
+                <p class="mt-4 text-system-600 max-w-2xl">Hover over elements to see Principa-style 3D motion and cursor interactions, set against GAQO's light ambient styling.</p>
+            </div>
+
+            <!-- Grid Layout for Components -->
+            <div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Buttons -->
+                <div class="glass-panel p-8 rounded-[32px] flex flex-col gap-8 anim-fade-up delay-[100ms] col-span-1 border border-white">
+                    <h3 class="text-lg font-medium border-b border-system-200 pb-2">Buttons</h3>
+                    
+                    <div>
+                        <p class="text-xs font-mono text-system-400 mb-2">Primary CTA / Dark</p>
+                        <button class="relative group h-12 w-full rounded-full border border-system-900 bg-gradient-to-r from-system-950 to-system-800 px-6 font-medium text-white shadow-xl transition-all hover:shadow-[0_10px_30px_rgba(15,23,42,0.2)] hover:scale-[1.02] overflow-hidden cursor-hover">
+                            <div class="absolute inset-0 w-1/2 bg-white/20 skew-x-[-20deg] -translate-x-[150%] group-hover:translate-x-[250%] transition-transform duration-700 ease-out"></div>
+                            <span class="relative z-10 flex items-center justify-center gap-2">
+                                Request Access <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-mono text-system-400 mb-2">Secondary / Glass</p>
+                        <button class="group h-12 w-full rounded-full border border-system-300 bg-white/60 backdrop-blur-md px-6 font-medium text-system-800 shadow-sm transition-all hover:bg-white hover:border-system-400 hover:-translate-y-0.5 cursor-hover">
+                            <span class="flex items-center justify-center gap-2">
+                                View Methodology
+                            </span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-mono text-system-400 mb-2">Text Icon / Underline</p>
+                        <a href="#" class="group inline-flex items-center gap-2 text-sm font-semibold text-brand-blue cursor-hover">
+                            Platform Documentation
+                            <iconify-icon icon="solar:arrow-right-up-linear" class="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+                            <span class="absolute bottom-0 left-0 w-full h-[1px] bg-brand-blue scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Input & Controls -->
+                <div class="glass-panel p-8 rounded-[32px] flex flex-col gap-8 anim-fade-up delay-[200ms] col-span-1 md:col-span-1 border border-white">
+                    <h3 class="text-lg font-medium border-b border-system-200 pb-2">Inputs & Controls</h3>
+                    
+                    <div class="relative">
+                        <label class="text-xs font-bold uppercase text-system-500 mb-1 block">Email Address</label>
+                        <div class="relative flex items-center">
+                            <iconify-icon icon="solar:letter-linear" class="absolute left-4 text-system-400 text-lg"></iconify-icon>
+                            <input type="email" placeholder="you@company.com" class="w-full h-12 bg-white border border-system-200 rounded-xl pl-12 pr-4 text-sm outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 transition-all cursor-hover" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold uppercase text-system-500 mb-2 block">Toggle Parameter</label>
+                        <div class="w-12 h-6 bg-system-300 rounded-full relative cursor-hover peer-checked:bg-brand-blue transition-colors">
+                            <div class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 shadow-sm transition-transform hover:scale-110"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded border border-system-300 bg-white flex items-center justify-center text-white hover:border-brand-blue cursor-hover transition-colors">
+                            <!-- checked state -->
+                            <!-- <iconify-icon icon="solar:check-read-linear" class="text-sm"></iconify-icon> -->
+                        </div>
+                        <span class="text-sm text-system-600">Sync regional streams</span>
+                    </div>
+                </div>
+
+                <!-- Complex Card (3D Hover) -->
+                <div class="col-span-1 md:col-span-2 lg:col-span-1 h-full perspective-normal anim-fade-up delay-[300ms]">
+                    <div class="w-full h-full glass-panel rounded-[32px] border border-white hover:border-brand-blue/30 p-8 transform-style-preserve-3d transition-transform duration-700 ease-out hover:rotate-y-[5deg] hover:rotate-x-[-5deg] hover:shadow-[0_20px_60px_rgba(59,130,246,0.15)] flex flex-col group cursor-hover">
+                        
+                        <div class="flex justify-between items-center mb-6 transform translate-z-[10px]">
+                            <div class="w-12 h-12 rounded-2xl bg-system-50 border border-system-100 flex items-center justify-center text-system-800 shadow-sm group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
+                                <iconify-icon icon="solar:graph-up-linear" class="text-2xl"></iconify-icon>
+                            </div>
+                            <div class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600 text-xs font-bold tracking-wide flex items-center gap-1.5">
+                                <div class="w-1.5 h-1.5 bg-brand-yellow rounded-full animate-pulse shadow-[0_0_5px_#eeab1b]"></div> Live
+                            </div>
+                        </div>
+
+                        <h4 class="text-2xl font-semibold tracking-tight text-system-900 mb-3 transform translate-z-[20px]">Observatory Model</h4>
+                        <p class="text-system-500 text-sm leading-relaxed mb-8 transform translate-z-[10px]">Detect pollutant build-up, drift anomalies, and emerging exposure shifts across monitored zones dynamically.</p>
+
+                        <div class="mt-auto grid grid-cols-2 gap-4 border-t border-system-200 pt-6 transform translate-z-[5px]">
+                            <div>
+                                <div class="text-3xl font-light text-system-900 tracking-tighter">186</div>
+                                <div class="text-[10px] font-mono text-system-400 uppercase mt-1">Networks</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-light text-brand-yellow tracking-tighter shadow-sm text-shadow-sm">9.2M</div>
+                                <div class="text-[10px] font-mono text-system-400 uppercase mt-1">Data Points/Day</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. ICONS -->
+    <section id="icons" class="relative z-10 py-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto anim-trigger">
+            <div class="mb-12 anim-fade-up">
+                <span class="font-mono text-xs uppercase tracking-widest text-brand-blue block mb-4">05 — Assets</span>
+                <h2 class="text-4xl md:text-5xl font-light tracking-tight text-system-900">Iconography (Solar Set)</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-6 pt-8 border-t border-system-200 anim-fade-up delay-[200ms]">
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:sparkles-linear" class="text-3xl text-system-700"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">sparkles</span>
+                </div>
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:layers-minimalistic-linear" class="text-3xl text-system-700"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">layers</span>
+                </div>
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:chart-square-linear" class="text-3xl text-system-700"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">chart-square</span>
+                </div>
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:bolt-linear" class="text-3xl text-brand-blue"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">bolt</span>
+                </div>
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:global-linear" class="text-3xl text-system-700"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">global</span>
+                </div>
+                <div class="flex flex-col items-center justify-center glass-panel aspect-square rounded-2xl hover:bg-white transition-colors cursor-hover hover:scale-105 duration-300">
+                    <iconify-icon icon="solar:atom-linear" class="text-3xl text-system-700"></iconify-icon>
+                    <span class="text-[10px] text-system-400 font-mono mt-4">atom</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-system-200 bg-white/50 backdrop-blur-md relative z-10">
+        <div class="text-center text-sm font-mono text-system-400 uppercase tracking-widest">
+            Design System Generated Based on Context Context
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Particles Initialization (GAQO Style: subtle dark/blue particles)
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 90, density: { enable: true, value_area: 800 } },
+                        color: { value: "#3B82F6" },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.45, random: true },
+                        size: { value: 4, random: true },
+                        line_linked: { enable: true, distance: 180, color: "#3B82F6", opacity: 0.45, width: 1.5 },
+                        move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+                    },
+                    interactivity: {
+                        detect_on: "window",
+                        events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+                        modes: { grab: { distance: 150, line_linked: { opacity: 0.2 } } }
+                    },
+                    retina_detect: true
+                });
+            }
+
+            // --- Custom Cursor Logic ---
+            const cursor = document.getElementById('cursor');
+            const follower = document.getElementById('cursor-follower');
+            
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let cursorX = mouseX;
+            let cursorY = mouseY;
+            let followerX = mouseX;
+            let followerY = mouseY;
+
+            // Cursor speed configs
+            const cursorSpeed = 0.8;
+            const followerSpeed = 0.2;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            // Smooth animation loop
+            function animateCursor() {
+                // LERP for main cursor
+                cursorX += (mouseX - cursorX) * cursorSpeed;
+                cursorY += (mouseY - cursorY) * cursorSpeed;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+
+                // LERP for follower
+                followerX += (mouseX - followerX) * followerSpeed;
+                followerY += (mouseY - followerY) * followerSpeed;
+                follower.style.left = followerX + 'px';
+                follower.style.top = followerY + 'px';
+
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Hover state logic
+            const hoverElements = document.querySelectorAll('.cursor-hover, a, button');
+            hoverElements.forEach((el) => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hovering');
+                    follower.style.border = '1px solid rgba(238,171,27,0.8)';
+                    follower.style.width = '70px';
+                    follower.style.height = '70px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hovering');
+                    follower.style.border = '1px solid rgba(59, 130, 246, 0.5)';
+                    follower.style.width = '40px';
+                    follower.style.height = '40px';
+                });
+            });
+
+
+            // --- Reveal Observer (Motion / Transitions)
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.anim-fade-up, .anim-trigger').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

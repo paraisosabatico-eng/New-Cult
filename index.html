@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Cult Films</title>
+  <meta name="description" content="New Cult Films — Em breve, uma nova forma de ver o cinema.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <!-- Film grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cursor"      aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════
+       HERO — Fold 1
+  ══════════════════════════════════════════ -->
+  <section class="hero" id="hero" aria-label="New Cult Films — Hero">
+
+    <div class="hero-center">
+
+      <!-- Linha decorativa -->
+      <div class="linha-wrap" aria-hidden="true">
+        <img src="img/Linha.png" alt="" class="linha">
+      </div>
+
+      <!-- Logo New Cult Films -->
+      <div class="logo-wrap">
+        <img
+          src="img/logo-newcult.png"
+          alt="New Cult Films"
+          class="logo-hero"
+          draggable="false"
+        >
+      </div>
+
+    </div><!-- /hero-center -->
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint" aria-hidden="true">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECOND FOLD — Aguardem
+  ══════════════════════════════════════════ -->
+  <section class="second-fold" id="second-fold" aria-label="Em Breve">
+
+    <!-- corner label -->
+    <span class="fold-label" aria-hidden="true">Em&nbsp;Breve</span>
+
+    <!-- Decorative golden line (animates on scroll) -->
+    <div class="parallax-line" id="fold2-line" aria-hidden="true"></div>
+
+    <!-- Aguardem block (centered) -->
+    <div class="aguardem-block">
+      <img
+        src="img/Aguardem.png"
+        alt="Aguardem — em breve vocês poderão navegar"
+        class="aguardem-img"
+        draggable="false"
+      >
+      <div style="display:flex;justify-content:center;margin-top:16px;">
+        <span class="blink-dot" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Footer strip -->
+    <div class="home-footer" aria-hidden="true">
+      <span>newcult.com.br</span>
+      <span>© 2026</span>
+    </div>
+
+  </section>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Home logic -->
+  <script src="js/home.js"></script>
+
+</body>
+</html>
