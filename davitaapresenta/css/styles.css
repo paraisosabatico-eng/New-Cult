@@ -265,9 +265,9 @@ body.second-fold-active:hover .custom-cursor-follower.hovering {
     border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(234, 179, 8, 0.3); /* Dourado suave */
+    background: #e8b800; /* Dourado sólido */
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(234, 179, 8, 0.6); /* Dourado mais forte no hover */
+    background: #ffcc00; /* Dourado mais claro no hover */
 }
