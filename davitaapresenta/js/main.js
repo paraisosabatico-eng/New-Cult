@@ -581,9 +581,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (fold4El && fold4Fill) {
         ScrollTrigger.create({
-            trigger: '#fourth-fold',
-            start: 'top 55%',
-            end: 'bottom 45%',
+            trigger: '#fifth-fold-videos', // APENAS NO BLOCO DOS VIDEOS
+            start: 'top top',              // Começa assim que o vídeo "A leveza" fixa na tela
+            end: '+=900%',                 // Termina junto com a animação dos 5 vídeos (900% do height)
             onEnter:     () => fold4El.classList.add('visible'),
             onLeave:     () => fold4El.classList.remove('visible'),
             onEnterBack: () => fold4El.classList.add('visible'),
