@@ -1,26 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
-    // --- Particles Initialization (Principa Style) ---
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: "#ffffff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: false },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
-                move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
-            },
-            interactivity: {
-                detect_on: "window",
-                events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
-                modes: { grab: { distance: 200, line_linked: { opacity: 0.8 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } }
-            },
-            retina_detect: true
-        });
-    }
-
     // 1. Lenis Smooth Scroll Configuration
     const lenis = new Lenis({
         duration: 1.5,
@@ -47,6 +25,91 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     gsap.ticker.lagSmoothing(0);
 
+    // --- Login Overlay Logic ---
+    const loginOverlay = document.getElementById('login-overlay');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    
+    if (loginForm && loginOverlay) {
+        // Lock scroll initially
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        lenis.stop();
+        
+        // Hide particles temporarily to not leak over overlay
+        const particles = document.getElementById('particles-js');
+        if (particles) particles.style.opacity = '0';
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            
+            if (user === 'davita-apresenta' && pass === '2026') {
+                // Unlock scroll
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                lenis.start();
+                
+                if (particles) gsap.to(particles, { opacity: 0.8, duration: 1 });
+                
+                // Fade out overlay
+                gsap.to(loginOverlay, {
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        loginOverlay.style.display = 'none';
+                    }
+                });
+            } else {
+                loginError.classList.remove('hidden');
+                gsap.fromTo(loginError, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 });
+                setTimeout(() => {
+                    gsap.to(loginError, { opacity: 0, duration: 0.4, onComplete: () => {
+                        loginError.classList.add('hidden');
+                    }});
+                }, 3000);
+            }
+        });
+
+        // Hover logic for cursor
+        const loginInputs = loginForm.querySelectorAll('input, button');
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        
+        loginInputs.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (cursor) cursor.classList.add('hovering');
+                if (follower) follower.classList.add('hovering');
+            });
+            el.addEventListener('mouseleave', () => {
+                if (cursor) cursor.classList.remove('hovering');
+                if (follower) follower.classList.remove('hovering');
+            });
+        });
+    }
+
+    // --- Particles Initialization (Principa Style) ---
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+            },
+            interactivity: {
+                detect_on: "window",
+                events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+                modes: { grab: { distance: 200, line_linked: { opacity: 0.8 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } }
+            },
+            retina_detect: true
+        });
+    }
 
     // 2. Custom Cursor Premium Logic
     const cursor = document.getElementById('cursor');
@@ -505,7 +568,7 @@ document.addEventListener("DOMContentLoaded", () => {
             position: fixed;
             top: 0; left: 0;
             border-radius: 50%;
-            z-index: 99999;
+            z-index: 9999999;
             transform-origin: center center;
             transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1), height 0.4s cubic-bezier(0.23, 1, 0.32, 1), background-color 0.4s, backdrop-filter 0.4s, mix-blend-mode 0.4s;
             will-change: width, height, transform;

@@ -19,7 +19,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Space+Mono&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS (via CDN para entrega em arquivo único) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,6 +30,7 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         serif: ['Playfair Display', 'serif'],
+                        mono: ['Space Mono', 'monospace'],
                     },
                     colors: {
                         brand: {
@@ -46,6 +47,27 @@
 </head>
 
 <body class="min-h-[250vh]"> <!-- Altura extra para permitir o scroll de revelação cinematográfico -->
+
+    <!-- Acesso Restrito (Login Overlay) -->
+    <div id="login-overlay" class="fixed inset-0 z-[999999] bg-[#282828] flex flex-col items-center justify-center pointer-events-auto">
+        <!-- Film grain overlay -->
+        <div class="absolute inset-0 opacity-[0.045] mix-blend-overlay pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E'); background-size: 200px 200px; z-index: 1;"></div>
+        
+        <div class="relative z-10 flex flex-col items-center gap-10 p-6 w-full max-w-md">
+            <img src="/img/logo-newcult.png" alt="New Cult Films" class="w-48 opacity-80 mb-4" draggable="false" style="filter: drop-shadow(0 0 60px rgba(232,184,0,.12));" />
+            
+            <form id="login-form" class="flex flex-col items-center gap-4 w-full" autocomplete="off">
+                <div class="w-full">
+                    <input type="text" id="username" placeholder="Usuário" required class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 font-mono text-[13px] outline-none rounded transition-colors focus:border-[#E8B800] focus:bg-white/10 text-center placeholder:text-white/40 placeholder:uppercase tracking-widest cursor-none" />
+                </div>
+                <div class="w-full">
+                    <input type="password" id="password" placeholder="Senha" required class="w-full bg-white/5 border border-white/10 text-white px-4 py-3 font-mono text-[13px] outline-none rounded transition-colors focus:border-[#E8B800] focus:bg-white/10 text-center placeholder:text-white/40 placeholder:uppercase tracking-widest cursor-none" />
+                </div>
+                <button type="submit" class="mt-2 bg-transparent text-[#E8B800] border border-[#E8B800] px-8 py-3 font-mono text-[13px] uppercase tracking-widest rounded transition-all hover:bg-[#E8B800] hover:text-[#282828] hover:-translate-y-0.5 cursor-none">Acessar</button>
+                <p id="login-error" class="hidden text-[#E8B800] mt-2 text-[11px] tracking-widest uppercase font-mono">Credenciais inválidas.</p>
+            </form>
+        </div>
+    </div>
 
     <!-- Global Particles Overlay -->
     <div class="fixed inset-0 z-[25] pointer-events-none mix-blend-difference opacity-80" id="particles-js"></div>
